@@ -6,7 +6,7 @@ export const appRouter = createTRPCRouter({
       console.log({userId : ctx.auth.user.id});
       return prisma.user.findMany({
         where:{
-          id : ctx.auth.user.id 
+          id : ctx.auth.user.id  
         }
       });
     }
