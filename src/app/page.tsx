@@ -1,13 +1,18 @@
-import { requireAuth } from "@/lib/auth-utils";
-import { caller } from "@/trpc/server";
+"use client"
 
-const Page = async() => {
-  await requireAuth();
-  const data = await  caller.getUsers() 
+import { Button } from "@/components/ui/button";
+import { useTRPC } from "@/trpc/client"
+import { useMutation} from "@tanstack/react-query";
+
+const Page = () => {
+  
+   const trpc = useTRPC();
+   const ai  = useMutation(trpc.testAI.mutationOptions());
+   console.log(ai);
+   
  return (
    <div className="min-h-screen min-w-screen flex items-center justify-center">
-       Protected Server Component
-       {JSON.stringify(data)}
+      <Button onClick={()=> ai.mutate()}>Test AI</Button>
   </div>
   )
 }
