@@ -14,7 +14,12 @@ export const execute = inngest.createFunction(
     generateText,{
       model : google("gemini-2.5-flash"),
       system : "You are a helpful assistant.",
-      prompt : "Can you help me to explain what is cryptography ? "
+      prompt : "Can you help me to explain what is cryptography ? ",
+      experimental_telemetry : {
+        isEnabled : true,
+        recordInputs : true,
+        recordOutputs : true,
+      }
     }
    )
    return step;
