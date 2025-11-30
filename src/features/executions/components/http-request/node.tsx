@@ -10,8 +10,8 @@ import {
 } from "./dialog";
 import { useReactFlow } from "@xyflow/react";
 
-// Correct data shape
 export type HttpRequestNodeData = {
+    variableName?: string;
     endpoint?: string;
     body?: string;
     method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -37,12 +37,12 @@ export const HttpRequestNode = memo(
                 nodes.map((node) =>
                     node.id === props.id
                         ? {
-                              ...node,
-                              data: {
-                                  ...node.data,
-                                  ...values,
-                              },
-                          }
+                            ...node,
+                            data: {
+                                ...node.data,
+                                ...values,
+                            },
+                        }
                         : node
                 )
             );
