@@ -109,7 +109,7 @@ export const HttpRequestDialog = ({
                                 <FormItem>
                                     <FormLabel>Variable Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="apiCall" {...field} />
+                                        <Input placeholder="httpResponse" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                        Use this name to refrence the result in other nodes: {""}

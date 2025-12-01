@@ -1,12 +1,13 @@
 import type { NodeExecutor } from "@/features/executions/types";
 import { NonRetriableError } from "inngest";
 import ky , {type Options as KyOptions} from "ky";
+import Handlebars from "handlebars";
 
 type HttpRequestData = {
-    variableName?: string;
-    endpoint?: string;
+    variableName: string;
+    endpoint: string;
     body?: string;
-    method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 }
 
 export const httpTriggerExecutor : NodeExecutor<HttpRequestData> = async ({ data ,nodeId, context,step }) => {
@@ -17,10 +18,14 @@ export const httpTriggerExecutor : NodeExecutor<HttpRequestData> = async ({ data
     if(!data.variableName){
         throw new NonRetriableError("Variable name is missing");
     }
+    
+    if(!data.method){
+        throw new NonRetriableError("Method is missing");
+    }
 
     const result =  await step.run("http-request",async () => {
-        const endpoint = data.endpoint!;
-        const method = data.method || "GET";
+        const endpoint = Handlebars.compile(data.endpoint)(context) ;
+        const method = data.method;
         const options : KyOptions = {
             method,
         }
@@ -41,16 +46,9 @@ export const httpTriggerExecutor : NodeExecutor<HttpRequestData> = async ({ data
             }
         }
         
-        if(data.variableName){
-            return {
-                ...context,
-                [data.variableName] : responsePayload
-            }
-        }
-
         return {
             ...context,
-            ...responsePayload
+            [data.variableName] : responsePayload
         }
 
     });
