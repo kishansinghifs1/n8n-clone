@@ -35,7 +35,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
     variableName: z.string().min(1, {message: "Please enter a variable name"}).regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/,{message: "Variable name must start with a letter or underscore and can only contain letters, numbers, and underscores"}),
-    endpoint: z.string().url("Please enter a valid URL"),
+    endpoint: z.string().min(1, {message: "Please enter an endpoint"}),
     method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
     body: z.string().optional(),
 });

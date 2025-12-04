@@ -5,17 +5,18 @@ import { topologicalSort } from "./utils";
 import { NodeType } from "@/generated/prisma/enums";
 import { getExecutor } from "@/features/executions/lib/executor-registry";
 import { httpRequestChannel } from "@/inngest/channels/http-request";
+import { googleFormChannel } from "@/inngest/channels/google-form";
 import {  manualTriggerChannel } from "@/inngest/channels/manual-trigger";
 
 export const executeWorkflow = inngest.createFunction(
   { id: "execute-workflow" 
   },
-  { event: "workflows/execute.workflow" , channels : [httpRequestChannel(),manualTriggerChannel()] },
+  { event: "workflows/execute.workflow" , channels : [httpRequestChannel(),manualTriggerChannel(),googleFormChannel()] },
   async ({ event, step ,publish }) => {
     const workflowId = event.data.workflowId;
-    if (!workflowId) {
+    if (!workflowId) {  
       throw new NonRetriableError("Workflow ID is missing");
-    }
+    }   
     const sortedNodes = await step.run("prepare-workflow", async () => {
       const workflow = await prisma.workflow.findUniqueOrThrow({
         where: {

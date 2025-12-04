@@ -52,8 +52,14 @@ const executionNodes: NodeTypeOption[] = [
         icon: GlobeIcon,
         description: "Runs the flow when an HTTP request is received."
     },
+    {
+        type: NodeType.GOOGLE_FORM_TRIGGER,
+        label: "Google Form Trigger",
+        icon: "/logos/googleform.svg",
+        description: "Runs the flow when a Google form is submitted."
+    },
 ]
-
+ 
 interface NodeSelectorProps {
     onOpenChange: (open: boolean) => void
     open: boolean

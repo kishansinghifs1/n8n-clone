@@ -11,6 +11,7 @@ import { PAGINATION_LIMIT } from "@/config/constants";
 import { NodeType } from "@/generated/prisma/enums";
 import { Node, Edge } from "@xyflow/react"
 import { inngest } from "@/inngest/client";
+import { sendWorkflowExecution } from "@/app/api/inngest/utils";
 
 export const workflowsRouter = createTRPCRouter({
   execute : protectedProcedure
@@ -22,10 +23,7 @@ export const workflowsRouter = createTRPCRouter({
         userId : ctx.auth.user.id
       }
      })
-     await inngest.send({
-      name : "workflows/execute.workflow",
-      data : {workflowId : input.id}
-     })
+     await sendWorkflowExecution({workflowId : input.id})
      return workflow;
     }),
   create: premiumProcedure.mutation(async ({ ctx }) => {
