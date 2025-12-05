@@ -5,13 +5,15 @@ import { ManualTriggerNode } from "@/features/triggers/components/manual-trigger
 import { StripeTrigger } from "@/features/triggers/components/stripe-trigger/node";
 import { NodeType } from "@/generated/prisma/enums";
 import type { NodeTypes } from "@xyflow/react";
+import { GeminiTriggerNode } from "@/features/executions/components/gemini/node";
 
 export const nodeComponents = {
-    [NodeType.INITIAL] : InitialNode,
-    [NodeType.MANUAL_TRIGGER] : ManualTriggerNode,
-    [NodeType.HTTP_REQUEST] : HttpRequestNode,
-    [NodeType.GOOGLE_FORM_TRIGGER] : GooogleFormTrigger,
-    [NodeType.STRIPE_TRIGGER] : StripeTrigger,
-}as const satisfies NodeTypes;
+    [NodeType.INITIAL]: InitialNode,
+    [NodeType.MANUAL_TRIGGER]: ManualTriggerNode,
+    [NodeType.HTTP_REQUEST]: HttpRequestNode,
+    [NodeType.GOOGLE_FORM_TRIGGER]: GooogleFormTrigger,
+    [NodeType.GEMINI]: GeminiTriggerNode,
+    [NodeType.STRIPE_TRIGGER]: StripeTrigger,
+} as const satisfies NodeTypes;
 
 export type RegisteredNodeTypes = keyof typeof nodeComponents;

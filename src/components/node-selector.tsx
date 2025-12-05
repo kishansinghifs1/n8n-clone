@@ -32,25 +32,10 @@ export type NodeTypeOption = {
 
 const triggerNodes: NodeTypeOption[] = [
     {
-        type: NodeType.INITIAL,
-        label: "Initial Node",
-        icon: MousePointerIcon,
-        description: "Initial node"
-    },
-    {
         type: NodeType.MANUAL_TRIGGER,
         label: "Manual Trigger",
         icon: WebhookIcon,
         description: "Runs the flow on clicking a button."
-    },
-]
-
-const executionNodes: NodeTypeOption[] = [
-    {
-        type: NodeType.HTTP_REQUEST,
-        label: "HTTP Request",
-        icon: GlobeIcon,
-        description: "Runs the flow when an HTTP request is received."
     },
     {
         type: NodeType.GOOGLE_FORM_TRIGGER,
@@ -63,6 +48,21 @@ const executionNodes: NodeTypeOption[] = [
         label: "Stripe Trigger",
         icon: "/logos/stripe.svg",
         description: "Runs the flow when a Stripe event is captured. { We are facing issues with it right now }"
+    },
+]
+
+const executionNodes: NodeTypeOption[] = [
+    {
+        type: NodeType.HTTP_REQUEST,
+        label: "HTTP Request",
+        icon: GlobeIcon,
+        description: "Runs the flow when an HTTP request is received."
+    },
+    {
+      type:NodeType.GEMINI,
+      label: "Gemini Trigger",
+      icon: "/logos/gemini.svg",
+      description: "Runs the flow when a Gemini event is captured."
     },
 ]
  
