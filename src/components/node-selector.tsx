@@ -58,6 +58,12 @@ const executionNodes: NodeTypeOption[] = [
         icon: "/logos/googleform.svg",
         description: "Runs the flow when a Google form is submitted."
     },
+    {
+        type: NodeType.STRIPE_TRIGGER,
+        label: "Stripe Trigger",
+        icon: "/logos/stripe.svg",
+        description: "Runs the flow when a Stripe event is captured. { We are facing issues with it right now }"
+    },
 ]
  
 interface NodeSelectorProps {
