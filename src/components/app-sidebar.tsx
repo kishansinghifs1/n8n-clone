@@ -44,12 +44,7 @@ const menuItems = [
         title: "Executions",
         icon: HistoryIcon,
         url: "/executions",
-      },
-      {
-        title: "Logs",
-        icon: FolderOpenIcon,
-        url: "/logs",
-      },
+      }
     ],
   },
 ];
@@ -87,7 +82,7 @@ export const AppSidebar = () => {
                       isActive={
                         item.url === "/"
                           ? pathname === "/"
-                          : pathname.startsWith(item.url)
+                          : pathname?.startsWith(item.url)
                       }
                       asChild
                       className="gap-x-4 h-10 px-4"

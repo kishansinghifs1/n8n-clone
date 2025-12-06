@@ -8,8 +8,6 @@ import { useEntitySearch } from "@/hooks/use-entity-search";
 import type { Workflow } from "@/generated/prisma/client";
 import { WorkflowIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { resetRevalidatingSegmentEntry } from "next/dist/client/components/segment-cache-impl/cache";
-
 
 export const WorkflowsList = () => {
   const workflows = useSuspenseWorkflows();
