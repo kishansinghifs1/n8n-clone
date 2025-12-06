@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
             raw: body
         };
         //inngest job trigger
-        await sendWorkflowExecution({ workflowId , initalData : {
+        await sendWorkflowExecution({ workflowId , initialData : {
             googleForm : formData
         }})
         return NextResponse.json({ success: true, data: formData });
