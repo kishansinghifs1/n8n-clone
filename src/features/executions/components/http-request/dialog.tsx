@@ -112,7 +112,7 @@ export const HttpRequestDialog = ({
                                         <Input placeholder="httpResponse" {...field} />
                                     </FormControl>
                                     <FormDescription>
-                                       Use this name to refrence the result in other nodes: {""}
+                                       Use this name to reference the result in other nodes: {""}
                                        {`{{${watchVariableName}.httpResponse.data}}`}
                                     </FormDescription>
                                     <FormMessage />

@@ -14,7 +14,7 @@ import { CredentialForm } from "./credentialForm";
 export const CredentialView = ({credentialId} : {credentialId: string}) => {
     const params = useParams();
     const {data : credential} = useSuspenseCredential(credentialId);
-    return <CredentialForm initalData={credential} />
+    return <CredentialForm initialData={credential} />
 }
 
 export const CredentialsList = () => {

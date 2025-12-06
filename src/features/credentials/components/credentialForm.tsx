@@ -16,7 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface CredentialFormProps {
-    initalData?: {
+    initialData?: {
         id?: string;
         name: string;
         type: CredentialType;
@@ -40,18 +40,18 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export const CredentialForm = ({ initalData }: CredentialFormProps) => {
+export const CredentialForm = ({ initialData }: CredentialFormProps) => {
 
     const router = useRouter();
     const createCredential = useCreateCredential();
     const updateCredential = useUpdateCredential();
     const { handleError, modal } = useUpgradeModal();
 
-    const isEdit = !!initalData?.id;
+    const isEdit = !!initialData?.id;
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initalData || {
+        defaultValues: initialData || {
             name: "",
             type: CredentialType.GEMINI,
             value: ""
@@ -59,9 +59,9 @@ export const CredentialForm = ({ initalData }: CredentialFormProps) => {
     })
 
     const onSubmit = async (values: FormValues) => {
-        if (isEdit && initalData?.id) {
+        if (isEdit && initialData?.id) {
             await updateCredential.mutateAsync({
-                id: initalData?.id || "",
+                id: initialData?.id || "",
                 name: values.name,
                 type: values.type,
                 value: values.value
