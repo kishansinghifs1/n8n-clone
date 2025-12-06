@@ -6,6 +6,8 @@ import { StripeTrigger } from "@/features/triggers/components/stripe-trigger/nod
 import { NodeType } from "@/generated/prisma/enums";
 import type { NodeTypes } from "@xyflow/react";
 import { GeminiTriggerNode } from "@/features/executions/components/gemini/node";
+import { DiscordNode } from "@/features/executions/components/discord/node";
+// import { SlackTriggerNode } from "@/features/executions/components/slack/node";
 
 export const nodeComponents = {
     [NodeType.INITIAL]: InitialNode,
@@ -14,6 +16,8 @@ export const nodeComponents = {
     [NodeType.GOOGLE_FORM_TRIGGER]: GooogleFormTrigger,
     [NodeType.GEMINI]: GeminiTriggerNode,
     [NodeType.STRIPE_TRIGGER]: StripeTrigger,
+    [NodeType.DISCORD]: DiscordNode,
+    // [NodeType.SLACK]: SlackTriggerNode,
 } as const satisfies NodeTypes;
 
 export type RegisteredNodeTypes = keyof typeof nodeComponents;

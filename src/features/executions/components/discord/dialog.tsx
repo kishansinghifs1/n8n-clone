@@ -1,5 +1,4 @@
 "use client";
-
 import {
     Dialog,
     DialogContent,
@@ -17,97 +16,79 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
 import { z } from "zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCredentialsByType } from "@/features/credentials/hooks/use-credentials";
 import { CredentialType } from "@/generated/prisma/enums";
-
-const AVAILABLE_MODELS = ['gemini-2.5-flash', 'gemini-2.5-sonnet', 'gemini-2.5-flash-sonnet', 'gemini-2.0-flash', 'gemini-2.0-sonnet', 'gemini-2.0-flash-sonnet'] as const;
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
     variableName: z.string().min(1, { message: "Please enter a variable name" }).regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, { message: "Variable name must start with a letter or underscore and can only contain letters, numbers, and underscores" }),
-    model: z.enum(AVAILABLE_MODELS),
-    systemPropmt: z.string().min(1, { message: "Please enter a system prompt" }).optional().or(z.literal("")),
-    userPrompt: z.string().min(1, { message: "Please enter a user prompt" }),
-    credentialId: z.string().min(1, { message: "Please enter a credential" }),
+    webhookUrl: z.string().min(1, { message: "Please enter a webhook URL" }),
+    content: z.string().min(1, { message: "Please enter a content" }).max(2000, { message: "Discord messages cannot exceed 2000 characters" }),
+    username: z.string().min(1, { message: "Please enter a username" }),
 });
 
-export type GeminiFormValues = z.infer<typeof formSchema>;
+export type DiscordFormValues = z.infer<typeof formSchema>;
 
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSubmit: (values: GeminiFormValues) => void;
-    defaultValues?: Partial<GeminiFormValues>;
+    onSubmit: (values: DiscordFormValues) => void;
+    defaultValues?: Partial<DiscordFormValues>;
 }
 
-export const GeminiDialog = ({
+export const DiscordDialog = ({
     open,
     onOpenChange,
     onSubmit,
     defaultValues = {},
 }: Props) => {
-    const form = useForm<GeminiFormValues>({
+
+    const form = useForm<DiscordFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            credentialId: defaultValues.credentialId || "",
             variableName: defaultValues.variableName || "",
-            model: defaultValues.model || "gemini-2.5-flash",
-            systemPropmt: defaultValues.systemPropmt || "",
-            userPrompt: defaultValues.userPrompt || "",
+            webhookUrl: defaultValues.webhookUrl || "",
+            content: defaultValues.content || "",
+            username: defaultValues.username || "",
         },
     });
 
-    const { data: credentials, isLoading: isLoadingCredentials } = useCredentialsByType(CredentialType.GEMINI);
+    const watchVariableName = form.watch("variableName") || "myDiscord";
 
-    // Reset when opened
     useEffect(() => {
         if (open) {
             form.reset({
-                credentialId: defaultValues.credentialId || "",
                 variableName: defaultValues.variableName || "",
-                model: defaultValues.model || "gemini-2.5-flash",
-                systemPropmt: defaultValues.systemPropmt || "",
-                userPrompt: defaultValues.userPrompt || "",
+                webhookUrl: defaultValues.webhookUrl || "",
+                content: defaultValues.content || "",
+                username: defaultValues.username || "",
             });
         }
-    }, [open, defaultValues, form]);
+    }, [open, defaultValues]);
 
-    const handleSubmit = (values: GeminiFormValues) => {
+    const handleSubmit = (values: DiscordFormValues) => {
         onSubmit(values);
         onOpenChange(false);
     };
 
-    const watchVariableName = form.watch("variableName") || "apiCall";
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Gemini Configuration</DialogTitle>
+                    <DialogTitle>Discord Configuration</DialogTitle>
                     <DialogDescription>
-                        Configure the AI model and prompts for this node.
+                        Configure the Discord node
                     </DialogDescription>
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(handleSubmit)}
-                        className="space-y-6 mt-4"
-                    >
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 mt-4">
+
                         {/* VARIABLE NAME */}
                         <FormField
                             control={form.control}
@@ -116,122 +97,86 @@ export const GeminiDialog = ({
                                 <FormItem>
                                     <FormLabel>Variable Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="myGemini" {...field} />
+                                        <Input placeholder="myDiscord" {...field} />
                                     </FormControl>
+
                                     <FormDescription>
-                                        Use this name to refrence the result in other nodes: {""}
+                                        Use this name to reference the result in other nodes:{" "}
                                         {`{{${watchVariableName}.text}}`}
                                     </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* CREDENTIAL */}
-                        <FormField
-                            control={form.control}
-                            name="credentialId"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Credential</FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        value={field.value}
-                                        disabled={isLoadingCredentials || !credentials?.length}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Place API Key" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {credentials?.map((credential) => (
-                                                <SelectItem key={credential.id} value={credential.id}>
-                                                    {credential.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* MODEL */}
-                        <FormField
-                            control={form.control}
-                            name="model"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Model</FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        value={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select method" />
-                                            </SelectTrigger>
-                                        </FormControl>
 
-                                        <SelectContent>
-                                            <SelectItem value="gemini-2.5-flash">gemini-2.5-flash</SelectItem>
-                                            <SelectItem value="gemini-2.5-sonnet">gemini-2.5-sonnet</SelectItem>
-                                            <SelectItem value="gemini-2.5-flash-sonnet">gemini-2.5-flash-sonnet</SelectItem>
-                                            <SelectItem value="gemini-2.0-flash">gemini-2.0-flash</SelectItem>
-                                            <SelectItem value="gemini-2.0-sonnet">gemini-2.0-sonnet</SelectItem>
-                                            <SelectItem value="gemini-2.0-flash-sonnet">gemini-2.0-flash-sonnet</SelectItem>
-                                        </SelectContent>
-                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        {/* SYSTEM PROMPT */}
+                        {/* WEBHOOK URL */}
                         <FormField
                             control={form.control}
-                            name="systemPropmt"
+                            name="webhookUrl"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>System Prompt (Optional)</FormLabel>
+                                    <FormLabel>Webhook URL</FormLabel>
                                     <FormControl>
-                                        <Textarea
-                                            placeholder="You are a helpful assistant."
-                                            className="min-h-[40px] text-sm resize-y placeholder:text-xs"
+                                        <Input
+                                            placeholder="https://discord.com/api/webhooks/123..."
                                             {...field}
                                         />
                                     </FormControl>
+
                                     <FormDescription>
-                                        Sets the behaviour of the assistant. Use {"{{variables}}"} for simple values or {"{{json variable}}"} for JSON values.
+                                        Get this from Discord → Channel Settings → Integrations → Webhooks.
                                     </FormDescription>
+
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        {/* USER PROMPT */}
+
+                        {/* USERNAME */}
                         <FormField
                             control={form.control}
-                            name="userPrompt"
+                            name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>User Prompt</FormLabel>
+                                    <FormLabel>Username</FormLabel>
                                     <FormControl>
-                                        <Textarea
-                                            placeholder="Write a REST API ?"
-                                            className="min-h-[80px] text-sm resize-y placeholder:text-xs"
-                                            {...field}
-                                        />
+                                        <Input placeholder="Discord Bot" {...field} />
                                     </FormControl>
+
                                     <FormDescription>
-                                        Sets the prompt to be sent to the assistant. Use {"{{variables}}"} for simple values or {"{{json variable}}"} for JSON values.
+                                        Override the webhook's default username.
                                     </FormDescription>
+
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        {/* FOOTER */}
+
+                        {/* CONTENT */}
+                        <FormField
+                            control={form.control}
+                            name="content"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Message Content</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="Write your message..." {...field} />
+                                    </FormControl>
+
+                                    <FormDescription>
+                                        Use {"{{variable}}"} for text or {"{{json variable}}"} for JSON objects.
+                                    </FormDescription>
+
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <DialogFooter>
                             <Button type="submit">Save Changes</Button>
                         </DialogFooter>
+
                     </form>
                 </Form>
             </DialogContent>

@@ -1,10 +1,9 @@
 import type { NodeExecutor } from "@/features/executions/types";
 import Handlebars from "handlebars";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { geminiChannel } from "@/inngest/channels/gemini";
-import { generateText } from "ai"
+import { discordChannel } from "@/inngest/channels/discord";
 import { NonRetriableError } from "inngest";
-import prisma from "@/lib/db";
+import { decode } from "html-entities";
+import ky from "ky";
 
 Handlebars.registerHelper("json", (context) => {
     const jsonString = JSON.stringify(context, null, 2);
@@ -12,76 +11,58 @@ Handlebars.registerHelper("json", (context) => {
     return safeString;
 });
 
-type GeminiData = {
-    credentialId?: string;
+type DiscordData = {
     variableName?: string;
-    model?: 'gemini-2.5-flash' | 'gemini-2.5-sonnet' | 'gemini-2.5-flash-sonnet' | 'gemini-2.0-flash' | 'gemini-2.0-sonnet' | 'gemini-2.0-flash-sonnet';
-    userPrompt?: string;
-    systemPrompt?: string;
+    webhookUrl?: string;
+    content?: string;
+    username?: string;
 }
 
-export const geminiExecutor: NodeExecutor<GeminiData> = async ({ data, nodeId, context, step, publish }) => {
+export const discordExecutor: NodeExecutor<DiscordData> = async ({ data, nodeId, context, step, publish }) => {
 
-    await publish(geminiChannel().status({ nodeId, status: "loading" }))
-    if (!data.variableName) {
-        await publish(
-            geminiChannel().status({ nodeId, status: "error" })
-        );
-        throw new NonRetriableError("Gemini Node : Variable name is missing");
-    }
+    await publish(discordChannel().status({ nodeId, status: "loading" }))
 
-    if (!data.credentialId) {
-        await publish(
-            geminiChannel().status({ nodeId, status: "error" })
-        );
-        throw new NonRetriableError("Gemini Node : Credential is missing");
-    }
-
-
-    const systemPrompt = data.systemPrompt ? Handlebars.compile(data.systemPrompt)(context) : "You are a helpful assistant.";
-    const userPrompt = data.userPrompt ? Handlebars.compile(data.userPrompt)(context): "";
-
-    const credential = await step.run("get-credentials", () => {
-        return prisma.credential.findUnique({
-            where: {
-                id: data.credentialId,
-            },
-        })
-    });
-
-    if(!credential) {
-        await publish(
-            geminiChannel().status({ nodeId, status: "error" })
-        );
-        throw new NonRetriableError("Gemini Node : Credential not found");
-    }
-
-    const google = createGoogleGenerativeAI({
-        apiKey: credential.value,
-    })
-
+    const rawContent = Handlebars.compile(data.content)(context)
+    const content = decode(rawContent)
+    const username = data.username ? decode(Handlebars.compile(data.username)(context)) : undefined
 
     try {
-        const { steps } = await step.ai.wrap(
-            "gemini-generate-text", generateText, {
-            model: google(data.model || "gemini-2.5-flash"), system: systemPrompt, prompt: userPrompt, experimental_telemetry: {
-                isEnabled: true, recordOutputs: true, recordInputs: true
+        const result = await step.run("discord-webhook", async () => {
+            if (!data.webhookUrl) {
+                await publish(
+                    discordChannel().status({ nodeId, status: "error" })
+                );
+                throw new NonRetriableError("Discord Node : Webhook URL is missing");
             }
-        }
-        )
-        const text = steps[0].content[0].type === "text" ? steps[0].content[0].text : "";
-        await publish(
-            geminiChannel().status({ nodeId, status: "success" })
-        )
+            await ky.post(data.webhookUrl, {
+                json: {
+                    content: content.slice(0, 2000),
+                    username,
+                }
+            })
 
-        return {
-            ...context, [data.variableName]: {
-                text,
+            if (!data.variableName) {
+                await publish(
+                    discordChannel().status({ nodeId, status: "error" })
+                );
+                throw new NonRetriableError("Discord Node : Variable name is missing");
             }
-        }
+
+            return {
+                ...context,
+                [data.variableName]: {
+                    messageContent: content.slice(0, 2000),
+                }
+            }
+
+        })
+        await publish(
+            discordChannel().status({ nodeId, status: "success" })
+        )
+        return result
     } catch (error) {
         await publish(
-            geminiChannel().status({ nodeId, status: "error" })
+            discordChannel().status({ nodeId, status: "error" })
         );
         throw error;
     }

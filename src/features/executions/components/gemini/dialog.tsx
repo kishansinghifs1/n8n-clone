@@ -40,7 +40,7 @@ const AVAILABLE_MODELS = ['gemini-2.5-flash', 'gemini-2.5-sonnet', 'gemini-2.5-f
 const formSchema = z.object({
     variableName: z.string().min(1, { message: "Please enter a variable name" }).regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/, { message: "Variable name must start with a letter or underscore and can only contain letters, numbers, and underscores" }),
     model: z.enum(AVAILABLE_MODELS),
-    systemPropmt: z.string().min(1, { message: "Please enter a system prompt" }).optional().or(z.literal("")),
+    systemPropmt: z.string().min(1, { message: "Please enter a system prompt" }).optional(),
     userPrompt: z.string().min(1, { message: "Please enter a user prompt" }),
     credentialId: z.string().min(1, { message: "Please enter a credential" }),
 });
@@ -95,7 +95,7 @@ export const GeminiDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Gemini Configuration</DialogTitle>
                     <DialogDescription>
@@ -195,7 +195,7 @@ export const GeminiDialog = ({
                                     <FormLabel>System Prompt (Optional)</FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            placeholder="You are a helpful assistant."
+                                            placeholder="You are a helpful assistant"
                                             className="min-h-[40px] text-sm resize-y placeholder:text-xs"
                                             {...field}
                                         />

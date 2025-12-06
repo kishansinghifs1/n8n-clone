@@ -49,6 +49,12 @@ const triggerNodes: NodeTypeOption[] = [
         icon: "/logos/stripe.svg",
         description: "Runs the flow when a Stripe event is captured. { We are facing issues with it right now }"
     },
+    // {
+    //     type : NodeType.SLACK,
+    //     label: "Slack Trigger",
+    //     icon: "/logos/slack.svg",
+    //     description: "Send a message to a Slack channel."
+    // }   
 ]
 
 const executionNodes: NodeTypeOption[] = [
@@ -64,6 +70,12 @@ const executionNodes: NodeTypeOption[] = [
       icon: "/logos/gemini.svg",
       description: "Runs the flow when a Gemini event is captured."
     },
+    {
+        type : NodeType.DISCORD,
+        label: "Discord Trigger",
+        icon: "/logos/discord.svg",
+        description: "Send a message to a Discord channel."
+    }
 ]
  
 interface NodeSelectorProps {

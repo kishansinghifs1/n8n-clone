@@ -8,10 +8,11 @@ import { httpRequestChannel } from "@/inngest/channels/http-request";
 import { geminiChannel } from "@/inngest/channels/gemini";
 import { googleFormChannel } from "@/inngest/channels/google-form";
 import {  manualTriggerChannel } from "@/inngest/channels/manual-trigger";
+import { discordChannel } from "@/inngest/channels/discord";
 
 export const executeWorkflow = inngest.createFunction(
   { id: "execute-workflow" , retries : 1 },
-  { event: "workflows/execute.workflow" , channels : [httpRequestChannel(),manualTriggerChannel(),googleFormChannel(),geminiChannel()] },
+  { event: "workflows/execute.workflow" , channels : [httpRequestChannel(),manualTriggerChannel(),googleFormChannel(),geminiChannel(),discordChannel()] },
   async ({ event, step ,publish }) => {
     const workflowId = event.data.workflowId;
     if (!workflowId) {  
