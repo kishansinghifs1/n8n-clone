@@ -49,6 +49,29 @@ export const ExecutionView = ({ executionId }: { executionId: string }) => {
                             {execution.workflow.name}
                         </Link>
                     </div>
+                    <div>
+                        <p className="text-sm font-medium text-muted-foreground">Status</p>
+                        <p className="text-sm">{execution.status}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-muted-foreground">Started At</p>
+                        <p className="text-sm">{formatDistanceToNow(new Date(execution.startedAt), { addSuffix: true })}</p>
+                    </div>
+                    {execution.completedAt ? (<div>
+                        <p className="text-sm font-medium text-muted-foreground">Completed At</p>
+                        <p className="text-sm">{formatDistanceToNow(new Date(execution.completedAt), { addSuffix: true })}</p>
+                    </div>) : null}
+
+                    {duration != null ? (
+                        <div>
+                            <p className="text-sm font-medium text-muted-foreground">Completed</p>
+                            <p className="text-sm">{duration}</p>
+                        </div>
+                    ) : null}
+                    {execution.status === ExecutionStatus.FAILED && <div>
+                        <p className="text-sm font-medium text-muted-foreground">Error</p>
+                        <p className="text-sm">{execution.error}</p>
+                    </div>}
                 </div>
             </CardContent>
         </Card>
