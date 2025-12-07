@@ -12,7 +12,7 @@ import { discordChannel } from "@/inngest/channels/discord";
 
 export const executeWorkflow = inngest.createFunction(
   {
-    id: "execute-workflow", retries: 1, onFailure: async ({ event, step }) => {
+    id: "execute-workflow", retries: 2, onFailure: async ({ event, step }) => {
       return prisma.execution.update({
         where: {
           inngestEventId: event.data.event.id
