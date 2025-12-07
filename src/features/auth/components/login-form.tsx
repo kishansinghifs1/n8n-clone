@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,20 +44,64 @@ export function LoginForm() {
     },
   });
 
+  const signInGithub = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "github",
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            "Registration successful! Please check your email to verify your account."
+          );
+          router.push("/");
+        },
+        onError: () => {
+          toast.error(`Registration failed `);
+        },
+      }
+    );
+  };
+
+  const signInGoogle = async () => {
+    await authClient.signIn.social(
+      {
+        provider: "google",
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            "Registration successful! Please check your email to verify your account."
+          );
+          router.push("/");
+        },
+        onError: () => {
+          toast.error(`Registration failed `);
+        },
+      }
+    );
+  };
+
+
   const onSubmit = async (data: LoginFormValues) => {
-    await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-      callbackURL : "/"
-    },{
-      onSuccess: () => {
-        toast.success("Registration successful! Please check your email to verify your account.");
-        router.push("/");
+    await authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        callbackURL: "/",
       },
-      onError: (ctx) => {
-        toast.error(`Registration failed: ${ctx.error.message}`);
-      },
-    })
+      {
+        onSuccess: () => {
+          toast.success(
+            "Registration successful! Please check your email to verify your account."
+          );
+          router.push("/");
+        },
+        onError: (ctx) => {
+          toast.error(`Registration failed: ${ctx.error.message}`);
+        },
+      }
+    );
   };
 
   const isPending = form.formState.isSubmitting;
@@ -79,8 +123,14 @@ export function LoginForm() {
                     className="w-full"
                     type="button"
                     disabled={isPending}
-                  > 
-                    <Image alt="GitHub" src="/logos/github.svg" width={20} height={20} />
+                    onClick={signInGithub}
+                  >
+                    <Image
+                      alt="GitHub"
+                      src="/logos/github.svg"
+                      width={20}
+                      height={20}
+                    />
                     Continue with GitHub
                   </Button>
 
@@ -89,7 +139,14 @@ export function LoginForm() {
                     className="w-full"
                     type="button"
                     disabled={isPending}
-                  ><Image alt="Google" src="/logos/google.svg" width={20} height={20} />
+                    onClick={signInGoogle}
+                  >
+                    <Image
+                      alt="Google"
+                      src="/logos/google.svg"
+                      width={20}
+                      height={20}
+                    />
                     Continue with Google
                   </Button>
                 </div>
