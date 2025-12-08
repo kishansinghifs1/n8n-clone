@@ -11,7 +11,7 @@
     "format": "biome format --write",
     "inngest:dev": "inngest-cli dev",
     "dev:all": "mprocs",
-    "postinstall": "prisma generate"
+    "postinstall": "mkdir -p src/generated && prisma generate"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.30",
