@@ -8,7 +8,7 @@ import { useRemoveCredential, useSuspenseCredential, useSuspenseCredentials } fr
 import { useCredentialQueryStates } from "../hooks/use-credentials-params";
 
 import Image from "next/image";
-import { Credential } from "@/generated/prisma/browser";
+import { Credential } from "@/generated/prisma";
 import { CredentialForm } from "./credentialForm";
 
 export const CredentialView = ({credentialId} : {credentialId: string}) => {

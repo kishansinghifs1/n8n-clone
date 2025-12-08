@@ -2,7 +2,7 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {useExecutionsQueryStates } from "./use-executions-params";
-import { CredentialType } from "@/generated/prisma/enums";
+import { CredentialType } from "@/generated/prisma";
 
 /**
  * Hook to fetch all workflows using suspense
