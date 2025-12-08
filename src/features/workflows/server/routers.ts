@@ -8,7 +8,7 @@ import prisma from "@/lib/db";
 import { z } from "zod";
 import { Pagination } from "@/components/ui/pagination";
 import { PAGINATION_LIMIT } from "@/config/constants";
-import { NodeType } from "@/generated/prisma/enums";
+import { NodeType } from "@/generated/prisma";
 import { Node, Edge } from "@xyflow/react"
 import { inngest } from "@/inngest/client";
 import { sendWorkflowExecution } from "@/app/api/inngest/utils";

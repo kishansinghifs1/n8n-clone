@@ -3,7 +3,7 @@ import { HttpRequestNode } from "@/features/executions/components/http-request/n
 import { GooogleFormTrigger } from "@/features/triggers/components/google-form-trigger/node";
 import { ManualTriggerNode } from "@/features/triggers/components/manual-trigger/node";
 import { StripeTrigger } from "@/features/triggers/components/stripe-trigger/node";
-import { NodeType } from "@/generated/prisma/enums";
+import { NodeType } from "@/generated/prisma";
 import type { NodeTypes } from "@xyflow/react";
 import { GeminiTriggerNode } from "@/features/executions/components/gemini/node";
 import { DiscordNode } from "@/features/executions/components/discord/node";

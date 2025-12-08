@@ -6,8 +6,8 @@ import { formatDistanceToNow } from "date-fns";
 import { useSuspenseExecution, useSuspenseExecutions } from "../hooks/use-executions";
 import { useExecutionsQueryStates } from "../hooks/use-executions-params";
 import Image from "next/image";
-import type { Execution } from "@/generated/prisma/browser";
-import { ExecutionStatus } from "@/generated/prisma/browser";
+import type { Execution } from "@/generated/prisma";
+import { ExecutionStatus } from "@/generated/prisma";
 import { CheckCircle2Icon, Clock12Icon, Loader2Icon, XCircleIcon } from "lucide-react";
 
  

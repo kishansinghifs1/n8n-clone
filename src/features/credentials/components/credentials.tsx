@@ -2,7 +2,7 @@
 import { EntityHeader, EntityContainer, EntitySearch, EntityPagination, LoadingView, ErrorView, EmptyView, EntityList, EntityItem } from "@/components/entity-components";
 import { useParams, useRouter } from "next/navigation";
 import { useEntitySearch } from "@/hooks/use-entity-search";
-import { CredentialType } from "@/generated/prisma/enums";
+import { CredentialType } from "@/generated/prisma";
 import { formatDistanceToNow } from "date-fns";
 import { useRemoveCredential, useSuspenseCredential, useSuspenseCredentials } from "../hooks/use-credentials";
 import { useCredentialQueryStates } from "../hooks/use-credentials-params";

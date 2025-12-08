@@ -33,7 +33,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCredentialsByType } from "@/features/credentials/hooks/use-credentials";
-import { CredentialType } from "@/generated/prisma/enums";
+import { CredentialType } from "@/generated/prisma";
 
 const AVAILABLE_MODELS = ['gemini-2.5-flash', 'gemini-2.5-sonnet', 'gemini-2.5-flash-sonnet', 'gemini-2.0-flash', 'gemini-2.0-sonnet', 'gemini-2.0-flash-sonnet'] as const;
 

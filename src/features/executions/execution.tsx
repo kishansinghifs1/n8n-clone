@@ -1,13 +1,10 @@
 "use client"
 
-import { ExecutionStatus } from "@/generated/prisma/enums"
+import { ExecutionStatus } from "@/generated/prisma"
 import { CheckCircle2Icon, Clock12Icon, Loader2Icon, XCircleIcon } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import Link from "next/link"
-import { useParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useSuspenseExecution } from "./hooks/use-executions"
 import { useState } from "react"
 
