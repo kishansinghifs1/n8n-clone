@@ -4,6 +4,19 @@
 
 NodeBase is a visual workflow builder that allows you to automate tasks by connecting various services and APIs. Create complex logic flows with a drag-and-drop interface, integrate with popular tools like Google, Slack, and Discord, and leverage AI capabilities.
 
+## Screenshots
+### Login Screen
+![Login Screen](./public/screenshots/login-screen.png)
+### Workflows Dashboard
+![Workflows Dashboard](./public/screenshots/workflows-dashboard.png)
+### Credentials
+![Credentials List](./public/screenshots/credentials-list.png)
+### Workflow Editor
+![Workflow Editor When Nodes Are Executing ](./public/screenshots/workflow-editor1.png)
+![Workflow Editor Successful Execution Of Node](./public/screenshots/workflow-editor2.png)
+### Execution History
+![Execution History](./public/screenshots/execution-history.png)
+
 ## Features
 
 -   **Visual Workflow Editor**: Drag-and-drop interface to build automation flows.
@@ -18,6 +31,28 @@ NodeBase is a visual workflow builder that allows you to automate tasks by conne
 
 ## System Design
 For a detailed overview of the architecture, data model, and technology stack, please refer to the **[System Design Document](./SYSTEM_DESIGN.md)**.
+
+```mermaid
+graph TD
+    User[User / Client] -->|HTTPS| NextJS[Next.js App Server]
+    
+    subgraph "Application Layer"
+        NextJS -->|tRPC| RPC[tRPC Routers]
+        RPC -->|Service Calls| Services[Services / Logic]
+        Services -->|ORM| Prisma[Prisma Client]
+        
+        NextJS -->|Events| InngestSDK[Inngest SDK]
+    end
+
+    subgraph "Data Layer"
+        Prisma -->|SQL| DB[(PostgreSQL Database)]
+    end
+
+    subgraph "External Systems"
+        InngestCloud[Inngest Cloud / Dev Server] -->|Webhook| NextJS
+        Services -->|API| ExtAPIs["External APIs (Google, Slack, etc)"]
+    end
+```
 
 ## Getting Started
 
@@ -70,8 +105,3 @@ To run the full stack with Inngest dev server and potential tunnel (if configure
 ```bash
 npm run dev:all
 ```
-
-## Learn More
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Inngest Documentation](https://www.inngest.com/docs)
-- [Prisma Documentation](https://www.prisma.io/docs)
