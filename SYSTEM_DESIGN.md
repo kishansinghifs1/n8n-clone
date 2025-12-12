@@ -25,7 +25,7 @@ graph TD
 
     subgraph "External Systems"
         InngestCloud[Inngest Cloud / Dev Server] -->|Webhook| NextJS
-        Services -->|API| ExtAPIs[External APIs (Google, Slack, etc)]
+        Services -->|API| ExtAPIs["External APIs (Google, Slack, etc)"]
     end
 ```
 
